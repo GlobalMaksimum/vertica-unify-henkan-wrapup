@@ -1,0 +1,9 @@
+{
+  "column_mappings": [
+    {
+      "source_column": "l_orderkey",
+      "target_column": "l_orderkey"
+    }
+  ],
+  "fetch_size": 600
+}

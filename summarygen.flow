@@ -1,0 +1,43 @@
+nodes:
+  - name: PgtoH
+    type: transfer
+    config:
+      subtype: spark
+      conf: conf/f_summarygen_pgtoh.json
+      source: PGLab
+      target: hive
+      explain_only: false
+      empty_source_check: true
+      source_table: public.lineitem
+      target_table: default.lineitem
+    dependsOn: []
+  - name: GenerateSummary
+    type: transform
+    config:
+      target: veon10
+      sql_file: sql/f_summarygen_generatesummary.sql
+      explain_only: false
+    dependsOn:
+      - PgtoH
+  - name: TruncateTarget
+    type: transform
+    config:
+      target: veon10
+      sql_file: sql/f_summarygen_truncatetarget.sql
+      explain_only: false
+    dependsOn:
+      - GenerateSummary
+  - name: LoadSummIntoV
+    type: transfer
+    config:
+      subtype: spark
+      conf: conf/f_summarygen_loadsummintov.json
+      source: hive
+      target: veon10
+      explain_only: false
+      empty_source_check: true
+      source_table: default.lineitem_summ
+      target_table: public.lineitem_summ
+    dependsOn:
+      - TruncateTarget
+config: {}
