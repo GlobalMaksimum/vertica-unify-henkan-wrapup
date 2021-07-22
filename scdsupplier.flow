@@ -23,11 +23,11 @@ nodes:
       target_table: default.dim_supplier
     dependsOn:
       - PGtoHSupplier
-  - name: Truncate table on v
+  - name: TruncateTableonV
     type: transform
     config:
       target: veon10
-      sql_file: sql/f_scdsupplier_truncate table on v.sql
+      sql_file: sql/f_scdsupplier_truncatetableonv.sql
       explain_only: false
     dependsOn:
       - SCDSupplierOnHadoop
@@ -43,5 +43,5 @@ nodes:
       empty_source_check: true
       target_table: public.dim_supplier
     dependsOn:
-      - Truncate table on v
+      - TruncateTableonV
 config: {}
