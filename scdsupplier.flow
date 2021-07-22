@@ -1,0 +1,47 @@
+nodes:
+  - name: PGtoHSupplier
+    type: transfer
+    config:
+      subtype: spark
+      conf: conf/f_scdsupplier_pgtohsupplier.json
+      source: PGLab
+      target: hive
+      source_table: public.supplier
+      explain_only: false
+      empty_source_check: true
+      target_table: default.supplier
+    dependsOn: []
+  - name: SCDSupplierOnHadoop
+    type: scd
+    config:
+      subtype: spark
+      conf: conf/f_scdsupplier_scdsupplieronhadoop.json
+      target: hive
+      explain_only: false
+      source_table: default.supplier
+      change_tolerance: 10
+      target_table: default.dim_supplier
+    dependsOn:
+      - PGtoHSupplier
+  - name: Truncate table on v
+    type: transform
+    config:
+      target: veon10
+      sql_file: sql/f_scdsupplier_truncate table on v.sql
+      explain_only: false
+    dependsOn:
+      - SCDSupplierOnHadoop
+  - name: DimToVertica
+    type: transfer
+    config:
+      subtype: spark
+      conf: conf/f_scdsupplier_dimtovertica.json
+      source: hive
+      target: veon10
+      source_table: default.dim_supplier
+      explain_only: false
+      empty_source_check: true
+      target_table: public.dim_supplier
+    dependsOn:
+      - Truncate table on v
+config: {}
