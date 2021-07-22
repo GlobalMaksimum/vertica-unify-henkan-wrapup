@@ -1,0 +1,9 @@
+nodes:
+  - name: RowGenerator
+    type: transform
+    config:
+      target: veon10
+      sql_file: sql/f_template_rowgenerator.sql
+      explain_only: false
+    dependsOn: []
+config: {}
