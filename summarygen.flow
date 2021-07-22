@@ -14,7 +14,7 @@ nodes:
   - name: GenerateSummary
     type: transform
     config:
-      target: veon10
+      target: v360hive
       sql_file: sql/f_summarygen_generatesummary.sql
       explain_only: false
     dependsOn:
